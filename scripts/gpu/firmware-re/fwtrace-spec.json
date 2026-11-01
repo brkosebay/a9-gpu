@@ -1,0 +1,601 @@
+{
+  "schema": 1,
+  "status": "BLOCKED_LOCAL_CODE_RESERVATION_UNPROVEN",
+  "deployment_authorized": false,
+  "ldr": {
+    "sha256": "33ae20cbbe2498e4f119ba4e9a55467e4e0192d4c86d5bf1903adce63ffa5dca",
+    "size": 119112,
+    "default_path": "build/gpu/extracted/agx-g5p-c0.ldr"
+  },
+  "address_rule": "load=0x80000000+(execution_pc-0x80000000)/2; data addresses never doubled",
+  "code_reservation": {
+    "load_base": "0x80005800",
+    "size": "0x400",
+    "execution_base": "0x8000b000",
+    "packed_base": "0x29780",
+    "old_copy_size": "0x55dc",
+    "candidate_copy_size": "0x5b80",
+    "required_proof": "No firmware dynamic store, stack, allocator or hardware alias uses 80005800..80005bff; physical RAM and MINIM fetch are valid there.",
+    "established": "No original LDR load or ZeroMem record overlaps. Original payload ends 8000565c; private/stack records start 8000a000. This is only static separation."
+  },
+  "trace_reservation": {
+    "kind": "NEW_HOST_ALLOCATION_REQUIRED",
+    "gpu_va": "0xe1c3208000",
+    "meta_va": "0x43208000",
+    "size": "0x4000",
+    "root_old_size": "0x8000",
+    "root_candidate_size": "0xc000",
+    "ownership": "Extend owned root allocation and mapping by one 16KiB page; exclude page from every object/queue/BO allocator. No existing word is borrowed.",
+    "visibility": "Root META uncached alias; host coherent DMA mapping and dma_rmb before reads. Validate mapping/visibility with separate probe before relying on absent markers."
+  },
+  "preservation": {
+    "saved": [
+      "D0FrT",
+      "D1RtP",
+      "D0.5",
+      "D1.5"
+    ],
+    "stack_extra_bytes": 16,
+    "stack_alignment": 8,
+    "flags": "No S/flag-setting stub instruction. ready_result replays original CMP after restoration.",
+    "link": "No CALLR is relocated; original CALLR instructions and D1RtP behavior remain in place.",
+    "markers": "Sticky unique marker per site; no counters, atomics, print loop or ordering assertion across sites. ready_result raw value is separately sampled."
+  },
+  "sites": [
+    {
+      "name": "policy_enter",
+      "meaning": "Common pre-MTS/retry policy trampoline; not policy implementation entry.",
+      "pc": "0x8000a4b4",
+      "load_address": "0x8000525a",
+      "packed_image_offset": "0x000291da",
+      "expected_original": "01c18285",
+      "replacement": "16c06092",
+      "continuation_pc": "0x8000a4bc",
+      "stub_pc": "0x8000b000",
+      "stub_load_address": "0x80005800",
+      "stub_packed_image_offset": "0x00029780",
+      "stub_bytes": "05a633c4020a00c8003a860a08f281a29fb76e7fbfb7ee7f408c01c18285e9ff0090",
+      "instructions": [
+        {
+          "pc": "0x8000b000",
+          "load_address": "0x80005800",
+          "bytes": "05a6",
+          "meta_word": "0xb92000e8",
+          "asm": "MSETL [A0StP++],D0FrT,D0.5"
+        },
+        {
+          "pc": "0x8000b004",
+          "load_address": "0x80005802",
+          "bytes": "33c4020a",
+          "meta_word": "0x02221905",
+          "asm": "MOVT D0FrT,#0x4320"
+        },
+        {
+          "pc": "0x8000b00c",
+          "load_address": "0x80005806",
+          "bytes": "00c8003a",
+          "meta_word": "0x32240000",
+          "asm": "OR D0FrT,D0FrT,#0x8000"
+        },
+        {
+          "pc": "0x8000b014",
+          "load_address": "0x8000580a",
+          "bytes": "860a",
+          "meta_word": "0x0228000c",
+          "asm": "MOV D0.5,#1"
+        },
+        {
+          "pc": "0x8000b018",
+          "load_address": "0x8000580c",
+          "bytes": "08f281a2",
+          "meta_word": "0xb6290022",
+          "asm": "SETD [D0FrT],D0.5"
+        },
+        {
+          "pc": "0x8000b020",
+          "load_address": "0x80005810",
+          "bytes": "9fb76e7f",
+          "meta_word": "0xa727ff6e",
+          "asm": "GETL D0FrT,D1RtP,[A0StP+#-16]"
+        },
+        {
+          "pc": "0x8000b028",
+          "load_address": "0x80005814",
+          "bytes": "bfb7ee7f",
+          "meta_word": "0xa72fffee",
+          "asm": "GETL D0.5,D1.5,[A0StP+#-8]"
+        },
+        {
+          "pc": "0x8000b030",
+          "load_address": "0x80005818",
+          "bytes": "408c",
+          "meta_word": "0x8a000080",
+          "asm": "SUB A0StP,A0StP,#0x10"
+        },
+        {
+          "pc": "0x8000b034",
+          "load_address": "0x8000581a",
+          "bytes": "01c18285",
+          "meta_word": "0x82188005",
+          "asm": "MOVT A0.3,#0x1000"
+        },
+        {
+          "pc": "0x8000b03c",
+          "load_address": "0x8000581e",
+          "bytes": "e9ff0090",
+          "meta_word": "0xa0ffa400",
+          "asm": "B 0x8000a4bc"
+        }
+      ],
+      "trace_address": "0x43208000",
+      "trace_marker": 1,
+      "result_address": null
+    },
+    {
+      "name": "policy_return",
+      "meaning": "Return from the first pre-MTS policy call only; retry return not sampled.",
+      "pc": "0x8000a128",
+      "load_address": "0x80005094",
+      "packed_image_offset": "0x00029014",
+      "expected_original": "71c1819c",
+      "replacement": "1fc0c092",
+      "continuation_pc": "0x8000a130",
+      "stub_pc": "0x8000b100",
+      "stub_load_address": "0x80005880",
+      "stub_packed_image_offset": "0x00029800",
+      "stub_bytes": "05a633c4020a00c8203a8a0a08f281a29fb76e7fbfb7ee7f408c71c1819cdfffa093",
+      "instructions": [
+        {
+          "pc": "0x8000b100",
+          "load_address": "0x80005880",
+          "bytes": "05a6",
+          "meta_word": "0xb92000e8",
+          "asm": "MSETL [A0StP++],D0FrT,D0.5"
+        },
+        {
+          "pc": "0x8000b104",
+          "load_address": "0x80005882",
+          "bytes": "33c4020a",
+          "meta_word": "0x02221905",
+          "asm": "MOVT D0FrT,#0x4320"
+        },
+        {
+          "pc": "0x8000b10c",
+          "load_address": "0x80005886",
+          "bytes": "00c8203a",
+          "meta_word": "0x32240040",
+          "asm": "OR D0FrT,D0FrT,#0x8008"
+        },
+        {
+          "pc": "0x8000b114",
+          "load_address": "0x8000588a",
+          "bytes": "8a0a",
+          "meta_word": "0x02280014",
+          "asm": "MOV D0.5,#2"
+        },
+        {
+          "pc": "0x8000b118",
+          "load_address": "0x8000588c",
+          "bytes": "08f281a2",
+          "meta_word": "0xb6290022",
+          "asm": "SETD [D0FrT],D0.5"
+        },
+        {
+          "pc": "0x8000b120",
+          "load_address": "0x80005890",
+          "bytes": "9fb76e7f",
+          "meta_word": "0xa727ff6e",
+          "asm": "GETL D0FrT,D1RtP,[A0StP+#-16]"
+        },
+        {
+          "pc": "0x8000b128",
+          "load_address": "0x80005894",
+          "bytes": "bfb7ee7f",
+          "meta_word": "0xa72fffee",
+          "asm": "GETL D0.5,D1.5,[A0StP+#-8]"
+        },
+        {
+          "pc": "0x8000b130",
+          "load_address": "0x80005898",
+          "bytes": "408c",
+          "meta_word": "0x8a000080",
+          "asm": "SUB A0StP,A0StP,#0x10"
+        },
+        {
+          "pc": "0x8000b134",
+          "load_address": "0x8000589a",
+          "bytes": "71c1819c",
+          "meta_word": "0xa3015c20",
+          "asm": "MOV D0.5,TXSTAT"
+        },
+        {
+          "pc": "0x8000b13c",
+          "load_address": "0x8000589e",
+          "bytes": "dfffa093",
+          "meta_word": "0xa0ff7fa0",
+          "asm": "B 0x8000a130"
+        }
+      ],
+      "trace_address": "0x43208008",
+      "trace_marker": 2,
+      "result_address": null
+    },
+    {
+      "name": "ready_result",
+      "meaning": "Readiness returned: record raw D0Re0, then replay CMP and conditional branch.",
+      "pc": "0x8000a248",
+      "load_address": "0x80005124",
+      "packed_image_offset": "0x000290a4",
+      "expected_original": "007402c00491",
+      "replacement": "1fc0c091fe93",
+      "continuation_pc": "0x8000a254",
+      "stub_pc": "0x8000b200",
+      "stub_load_address": "0x80005900",
+      "stub_packed_image_offset": "0x00029880",
+      "stub_bytes": "05a633c4020a00c8403a08f205a08e0a08f281a29fb76e7fbfb7ee7f408c0074e2ff6491e0ff6090",
+      "instructions": [
+        {
+          "pc": "0x8000b200",
+          "load_address": "0x80005900",
+          "bytes": "05a6",
+          "meta_word": "0xb92000e8",
+          "asm": "MSETL [A0StP++],D0FrT,D0.5"
+        },
+        {
+          "pc": "0x8000b204",
+          "load_address": "0x80005902",
+          "bytes": "33c4020a",
+          "meta_word": "0x02221905",
+          "asm": "MOVT D0FrT,#0x4320"
+        },
+        {
+          "pc": "0x8000b20c",
+          "load_address": "0x80005906",
+          "bytes": "00c8403a",
+          "meta_word": "0x32240080",
+          "asm": "OR D0FrT,D0FrT,#0x8010"
+        },
+        {
+          "pc": "0x8000b214",
+          "load_address": "0x8000590a",
+          "bytes": "08f205a0",
+          "meta_word": "0xb6010122",
+          "asm": "SETD [D0FrT+#4],D0Re0"
+        },
+        {
+          "pc": "0x8000b21c",
+          "load_address": "0x8000590e",
+          "bytes": "8e0a",
+          "meta_word": "0x0228001c",
+          "asm": "MOV D0.5,#3"
+        },
+        {
+          "pc": "0x8000b220",
+          "load_address": "0x80005910",
+          "bytes": "08f281a2",
+          "meta_word": "0xb6290022",
+          "asm": "SETD [D0FrT],D0.5"
+        },
+        {
+          "pc": "0x8000b228",
+          "load_address": "0x80005914",
+          "bytes": "9fb76e7f",
+          "meta_word": "0xa727ff6e",
+          "asm": "GETL D0FrT,D1RtP,[A0StP+#-16]"
+        },
+        {
+          "pc": "0x8000b230",
+          "load_address": "0x80005918",
+          "bytes": "bfb7ee7f",
+          "meta_word": "0xa72fffee",
+          "asm": "GETL D0.5,D1.5,[A0StP+#-8]"
+        },
+        {
+          "pc": "0x8000b238",
+          "load_address": "0x8000591c",
+          "bytes": "408c",
+          "meta_word": "0x8a000080",
+          "asm": "SUB A0StP,A0StP,#0x10"
+        },
+        {
+          "pc": "0x8000b23c",
+          "load_address": "0x8000591e",
+          "bytes": "0074",
+          "meta_word": "0x72000000",
+          "asm": "CMP D0Re0,#0"
+        },
+        {
+          "pc": "0x8000b240",
+          "load_address": "0x80005920",
+          "bytes": "e2ff6491",
+          "meta_word": "0xa0ff8964",
+          "asm": "BNE 0x8000a36c (relocated original conditional branch)"
+        },
+        {
+          "pc": "0x8000b248",
+          "load_address": "0x80005924",
+          "bytes": "e0ff6090",
+          "meta_word": "0xa0ff8060",
+          "asm": "B 0x8000a254"
+        }
+      ],
+      "trace_address": "0x43208010",
+      "trace_marker": 3,
+      "result_address": "0x43208014"
+    },
+    {
+      "name": "service_enter",
+      "meaning": "Service trampoline entered with original CALLR link preserved.",
+      "pc": "0x8000a444",
+      "load_address": "0x80005222",
+      "packed_image_offset": "0x000291a2",
+      "expected_original": "01c18285",
+      "replacement": "1dc0e091",
+      "continuation_pc": "0x8000a44c",
+      "stub_pc": "0x8000b300",
+      "stub_load_address": "0x80005980",
+      "stub_packed_image_offset": "0x00029900",
+      "stub_bytes": "05a633c4020a00c8603a920a08f281a29fb76e7fbfb7ee7f408c01c18285e2ff8090",
+      "instructions": [
+        {
+          "pc": "0x8000b300",
+          "load_address": "0x80005980",
+          "bytes": "05a6",
+          "meta_word": "0xb92000e8",
+          "asm": "MSETL [A0StP++],D0FrT,D0.5"
+        },
+        {
+          "pc": "0x8000b304",
+          "load_address": "0x80005982",
+          "bytes": "33c4020a",
+          "meta_word": "0x02221905",
+          "asm": "MOVT D0FrT,#0x4320"
+        },
+        {
+          "pc": "0x8000b30c",
+          "load_address": "0x80005986",
+          "bytes": "00c8603a",
+          "meta_word": "0x322400c0",
+          "asm": "OR D0FrT,D0FrT,#0x8018"
+        },
+        {
+          "pc": "0x8000b314",
+          "load_address": "0x8000598a",
+          "bytes": "920a",
+          "meta_word": "0x02280024",
+          "asm": "MOV D0.5,#4"
+        },
+        {
+          "pc": "0x8000b318",
+          "load_address": "0x8000598c",
+          "bytes": "08f281a2",
+          "meta_word": "0xb6290022",
+          "asm": "SETD [D0FrT],D0.5"
+        },
+        {
+          "pc": "0x8000b320",
+          "load_address": "0x80005990",
+          "bytes": "9fb76e7f",
+          "meta_word": "0xa727ff6e",
+          "asm": "GETL D0FrT,D1RtP,[A0StP+#-16]"
+        },
+        {
+          "pc": "0x8000b328",
+          "load_address": "0x80005994",
+          "bytes": "bfb7ee7f",
+          "meta_word": "0xa72fffee",
+          "asm": "GETL D0.5,D1.5,[A0StP+#-8]"
+        },
+        {
+          "pc": "0x8000b330",
+          "load_address": "0x80005998",
+          "bytes": "408c",
+          "meta_word": "0x8a000080",
+          "asm": "SUB A0StP,A0StP,#0x10"
+        },
+        {
+          "pc": "0x8000b334",
+          "load_address": "0x8000599a",
+          "bytes": "01c18285",
+          "meta_word": "0x82188005",
+          "asm": "MOVT A0.3,#0x1000"
+        },
+        {
+          "pc": "0x8000b33c",
+          "load_address": "0x8000599e",
+          "bytes": "e2ff8090",
+          "meta_word": "0xa0ff8880",
+          "asm": "B 0x8000a44c"
+        }
+      ],
+      "trace_address": "0x43208018",
+      "trace_marker": 4,
+      "result_address": null
+    },
+    {
+      "name": "compute_kick_written",
+      "meaning": "Replay original R0+478 store BEFORE marker; marker proves store instruction issued.",
+      "pc": "0x80008f3c",
+      "load_address": "0x8000479e",
+      "packed_image_offset": "0x0002871e",
+      "expected_original": "82b52d4f",
+      "replacement": "49c02092",
+      "continuation_pc": "0x80008f44",
+      "stub_pc": "0x8000b400",
+      "stub_load_address": "0x80005a00",
+      "stub_packed_image_offset": "0x00029980",
+      "stub_bytes": "82b52d4f05a633c4020a02c8003a960a08f281a29fb76e7fbfb7ee7f408cb6ff4090",
+      "instructions": [
+        {
+          "pc": "0x8000b400",
+          "load_address": "0x80005a00",
+          "bytes": "82b52d4f",
+          "meta_word": "0xa5208f2d",
+          "asm": "SETD [D0Ar6+#1144],D0FrT"
+        },
+        {
+          "pc": "0x8000b408",
+          "load_address": "0x80005a04",
+          "bytes": "05a6",
+          "meta_word": "0xb92000e8",
+          "asm": "MSETL [A0StP++],D0FrT,D0.5"
+        },
+        {
+          "pc": "0x8000b40c",
+          "load_address": "0x80005a06",
+          "bytes": "33c4020a",
+          "meta_word": "0x02221905",
+          "asm": "MOVT D0FrT,#0x4320"
+        },
+        {
+          "pc": "0x8000b414",
+          "load_address": "0x80005a0a",
+          "bytes": "02c8003a",
+          "meta_word": "0x32240100",
+          "asm": "OR D0FrT,D0FrT,#0x8020"
+        },
+        {
+          "pc": "0x8000b41c",
+          "load_address": "0x80005a0e",
+          "bytes": "960a",
+          "meta_word": "0x0228002c",
+          "asm": "MOV D0.5,#5"
+        },
+        {
+          "pc": "0x8000b420",
+          "load_address": "0x80005a10",
+          "bytes": "08f281a2",
+          "meta_word": "0xb6290022",
+          "asm": "SETD [D0FrT],D0.5"
+        },
+        {
+          "pc": "0x8000b428",
+          "load_address": "0x80005a14",
+          "bytes": "9fb76e7f",
+          "meta_word": "0xa727ff6e",
+          "asm": "GETL D0FrT,D1RtP,[A0StP+#-16]"
+        },
+        {
+          "pc": "0x8000b430",
+          "load_address": "0x80005a18",
+          "bytes": "bfb7ee7f",
+          "meta_word": "0xa72fffee",
+          "asm": "GETL D0.5,D1.5,[A0StP+#-8]"
+        },
+        {
+          "pc": "0x8000b438",
+          "load_address": "0x80005a1c",
+          "bytes": "408c",
+          "meta_word": "0x8a000080",
+          "asm": "SUB A0StP,A0StP,#0x10"
+        },
+        {
+          "pc": "0x8000b43c",
+          "load_address": "0x80005a1e",
+          "bytes": "b6ff4090",
+          "meta_word": "0xa0fed840",
+          "asm": "B 0x80008f44"
+        }
+      ],
+      "trace_address": "0x43208020",
+      "trace_marker": 5,
+      "result_address": null
+    },
+    {
+      "name": "compute_finish_enter",
+      "meaning": "Finish33 cleanup entry; marker precedes original prologue.",
+      "pc": "0x80008cdc",
+      "load_address": "0x8000466e",
+      "packed_image_offset": "0x000285ee",
+      "expected_original": "05a65d9e",
+      "replacement": "50c02091",
+      "continuation_pc": "0x80008ce4",
+      "stub_pc": "0x8000b500",
+      "stub_load_address": "0x80005a80",
+      "stub_packed_image_offset": "0x00029a00",
+      "stub_bytes": "05a633c4020a02c8203a9a0a08f281a29fb76e7fbfb7ee7f408c05a65d9eafff4091",
+      "instructions": [
+        {
+          "pc": "0x8000b500",
+          "load_address": "0x80005a80",
+          "bytes": "05a6",
+          "meta_word": "0xb92000e8",
+          "asm": "MSETL [A0StP++],D0FrT,D0.5"
+        },
+        {
+          "pc": "0x8000b504",
+          "load_address": "0x80005a82",
+          "bytes": "33c4020a",
+          "meta_word": "0x02221905",
+          "asm": "MOVT D0FrT,#0x4320"
+        },
+        {
+          "pc": "0x8000b50c",
+          "load_address": "0x80005a86",
+          "bytes": "02c8203a",
+          "meta_word": "0x32240140",
+          "asm": "OR D0FrT,D0FrT,#0x8028"
+        },
+        {
+          "pc": "0x8000b514",
+          "load_address": "0x80005a8a",
+          "bytes": "9a0a",
+          "meta_word": "0x02280034",
+          "asm": "MOV D0.5,#6"
+        },
+        {
+          "pc": "0x8000b518",
+          "load_address": "0x80005a8c",
+          "bytes": "08f281a2",
+          "meta_word": "0xb6290022",
+          "asm": "SETD [D0FrT],D0.5"
+        },
+        {
+          "pc": "0x8000b520",
+          "load_address": "0x80005a90",
+          "bytes": "9fb76e7f",
+          "meta_word": "0xa727ff6e",
+          "asm": "GETL D0FrT,D1RtP,[A0StP+#-16]"
+        },
+        {
+          "pc": "0x8000b528",
+          "load_address": "0x80005a94",
+          "bytes": "bfb7ee7f",
+          "meta_word": "0xa72fffee",
+          "asm": "GETL D0.5,D1.5,[A0StP+#-8]"
+        },
+        {
+          "pc": "0x8000b530",
+          "load_address": "0x80005a98",
+          "bytes": "408c",
+          "meta_word": "0x8a000080",
+          "asm": "SUB A0StP,A0StP,#0x10"
+        },
+        {
+          "pc": "0x8000b534",
+          "load_address": "0x80005a9a",
+          "bytes": "05a6",
+          "meta_word": "0xb92000e8",
+          "asm": "MSETL [A0StP++],D0FrT,D0.5"
+        },
+        {
+          "pc": "0x8000b538",
+          "load_address": "0x80005a9c",
+          "bytes": "5d9e",
+          "meta_word": "0xa3194820",
+          "asm": "MOV D0.5,D1Ar1"
+        },
+        {
+          "pc": "0x8000b53c",
+          "load_address": "0x80005a9e",
+          "bytes": "afff4091",
+          "meta_word": "0xa0febd40",
+          "asm": "B 0x80008ce4"
+        }
+      ],
+      "trace_address": "0x43208028",
+      "trace_marker": 6,
+      "result_address": null
+    }
+  ]
+}
